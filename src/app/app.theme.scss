@@ -76,11 +76,11 @@ $typography: mat-typography-config(
 // -----------------------------------------------------------------------------------------------------
 // @ Component theming
 // -----------------------------------------------------------------------------------------------------
+@import "src/app/authentication/login/login.theme";
 
 // Define a mixin for easier access
 @mixin components-theme($theme) {
-
-    // Layout components
+    @include login-theme($theme);
 }
 
 // -----------------------------------------------------------------------------------------------------
