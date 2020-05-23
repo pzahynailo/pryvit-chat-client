@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,6 +20,7 @@ import { LayoutModule } from './layout/layout.module';
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { FakeDbService } from './fake-db/fake-db.service';
 import { AuthGuard } from './services/auth/auth-guard.service';
+import { AuthInterceptor } from './services/auth/auth.interceptor';
 
 @NgModule({
     declarations: [
@@ -56,7 +57,12 @@ import { AuthGuard } from './services/auth/auth-guard.service';
         AppComponent
     ],
     providers: [
-        AuthGuard
+        AuthGuard,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true
+        },
     ]
 })
 export class AppModule {

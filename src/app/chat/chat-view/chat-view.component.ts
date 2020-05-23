@@ -5,6 +5,9 @@ import { takeUntil } from 'rxjs/operators';
 
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { ChatService } from '../chat.service';
+import { Room } from '../../entities/room';
+import { User } from '../../entities/user';
+import { Message } from '../../entities/message';
 
 @Component({
     selector: 'chat-view',
@@ -13,12 +16,9 @@ import { ChatService } from '../chat.service';
     encapsulation: ViewEncapsulation.None
 })
 export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
-    user: any;
-    chat: any;
-    dialog: any;
-    contact: any;
+    user: User;
     replyInput: any;
-    selectedChat: any;
+    selectedChat: Room;
 
     @ViewChild(FusePerfectScrollbarDirective)
     directiveScroll: FusePerfectScrollbarDirective;
@@ -58,8 +58,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
             .subscribe(chatData => {
                 if (chatData) {
                     this.selectedChat = chatData;
-                    this.contact = chatData.contact;
-                    this.dialog = chatData.dialog;
+                    // this.contact = chatData.contact;
+                    // this.selectedChat.messages = chatData.dialog;
                     this.readyToReply();
                 }
             });
@@ -93,10 +93,11 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * @param i
      * @returns {boolean}
      */
-    shouldShowContactAvatar(message, i): boolean {
+    shouldShowContactAvatar(message: Message, i): boolean {
+        const messages = this.selectedChat.messages;
         return (
-            message.who === this.contact.id &&
-            ((this.dialog[i + 1] && this.dialog[i + 1].who !== this.contact.id) || !this.dialog[i + 1])
+            message.user._id !== this.user._id &&
+            ((messages[i + 1] && messages[i + 1].user._id !== message.user._id) || !messages[i + 1])
         );
     }
 
@@ -108,7 +109,8 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * @returns {boolean}
      */
     isFirstMessageOfGroup(message, i): boolean {
-        return (i === 0 || this.dialog[i - 1] && this.dialog[i - 1].who !== message.who);
+        return (i === 0 || this.selectedChat.messages[i - 1]
+            && this.selectedChat.messages[i - 1].user._id !== message.who);
     }
 
     /**
@@ -119,15 +121,16 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * @returns {boolean}
      */
     isLastMessageOfGroup(message, i): boolean {
-        return (i === this.dialog.length - 1 || this.dialog[i + 1] && this.dialog[i + 1].who !== message.who);
+        return (i === this.selectedChat.messages.length - 1 || this.selectedChat.messages[i + 1]
+            && this.selectedChat.messages[i + 1].user._id !== message.who);
     }
 
     /**
      * Select contact
      */
-    selectContact(): void {
-        this._chatService.selectContact(this.contact);
-    }
+    // selectContact(): void {
+    //     this._chatService.selectContact(this.contact);
+    // }
 
     /**
      * Ready to reply
@@ -169,27 +172,27 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     reply(event): void {
         event.preventDefault();
-
-        if (!this.replyForm.form.value.message) {
-            return;
-        }
-
-        // Message
-        const message = {
-            who: this.user.id,
-            message: this.replyForm.form.value.message,
-            time: new Date().toISOString()
-        };
-
-        // Add the message to the chat
-        this.dialog.push(message);
-
-        // Reset the reply form
-        this.replyForm.reset();
-
-        // Update the server
-        this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
-            this.readyToReply();
-        });
+        //
+        // if (!this.replyForm.form.value.message) {
+        //     return;
+        // }
+        //
+        // // Message
+        // const message = {
+        //     who: this.user.id,
+        //     message: this.replyForm.form.value.message,
+        //     time: new Date().toISOString()
+        // };
+        //
+        // // Add the message to the chat
+        // this.selectedChat.messages.push(message);
+        //
+        // // Reset the reply form
+        // this.replyForm.reset();
+        //
+        // // Update the server
+        // this._chatService.updateDialog(this.selectedChat._id, this.selectedChat.messages).then(response => {
+        //     this.readyToReply();
+        // });
     }
 }
