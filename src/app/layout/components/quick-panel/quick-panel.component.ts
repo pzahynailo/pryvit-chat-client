@@ -4,13 +4,12 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-    selector     : 'quick-panel',
-    templateUrl  : './quick-panel.component.html',
-    styleUrls    : ['./quick-panel.component.scss'],
+    selector: 'quick-panel',
+    templateUrl: './quick-panel.component.html',
+    styleUrls: [ './quick-panel.component.scss' ],
     encapsulation: ViewEncapsulation.None
 })
-export class QuickPanelComponent implements OnInit, OnDestroy
-{
+export class QuickPanelComponent implements OnInit, OnDestroy {
     date: Date;
     events: any[];
     notes: any[];
@@ -26,14 +25,13 @@ export class QuickPanelComponent implements OnInit, OnDestroy
      */
     constructor(
         private _httpClient: HttpClient
-    )
-    {
+    ) {
         // Set the defaults
         this.date = new Date();
         this.settings = {
             notify: true,
-            cloud : false,
-            retro : true
+            cloud: false,
+            retro: true
         };
 
         // Set the private defaults
@@ -47,8 +45,7 @@ export class QuickPanelComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Subscribe to the events
         this._httpClient.get('api/quick-panel-events')
             .pipe(takeUntil(this._unsubscribeAll))
@@ -67,8 +64,7 @@ export class QuickPanelComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();

@@ -16,10 +16,10 @@ import { ChatPanelService } from 'app/layout/components/chat-panel/chat-panel.se
     declarations: [
         ChatPanelComponent
     ],
-    providers   : [
+    providers: [
         ChatPanelService
     ],
-    imports     : [
+    imports: [
         MatButtonModule,
         MatFormFieldModule,
         MatIconModule,
@@ -30,10 +30,9 @@ import { ChatPanelService } from 'app/layout/components/chat-panel/chat-panel.se
 
         FuseSharedModule
     ],
-    exports     : [
+    exports: [
         ChatPanelComponent
     ]
 })
-export class ChatPanelModule
-{
+export class ChatPanelModule {
 }

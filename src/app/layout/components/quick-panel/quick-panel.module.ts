@@ -11,7 +11,7 @@ import { QuickPanelComponent } from 'app/layout/components/quick-panel/quick-pan
     declarations: [
         QuickPanelComponent
     ],
-    imports     : [
+    imports: [
         MatDividerModule,
         MatListModule,
         MatSlideToggleModule,
@@ -22,6 +22,5 @@ import { QuickPanelComponent } from 'app/layout/components/quick-panel/quick-pan
         QuickPanelComponent
     ]
 })
-export class QuickPanelModule
-{
+export class QuickPanelModule {
 }

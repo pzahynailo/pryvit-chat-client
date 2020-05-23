@@ -1,4 +1,6 @@
-<div id="login" fxLayout="column">
+<div id="login" fxLayout="column" class="page-layout carded fullwidth">
+
+    <div class="top-bg accent"></div>
 
     <div id="login-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
 
@@ -14,15 +16,36 @@
 
                 <mat-form-field appearance="outline">
                     <mat-label>Нікнейм</mat-label>
-                    <input matInput formControlName="nickname">
-                    <mat-error *ngIf="loginForm.get('nickname').hasError('required')">
+                    <input matInput formControlName="username">
+                    <mat-error *ngIf="username.hasError('required')">
                         Нікнейм є обов'язковим.
                     </mat-error>
                 </mat-form-field>
 
+                <mat-form-field appearance="outline">
+                    <mat-label>Пароль</mat-label>
+                    <input type="password" matInput formControlName="password">
+                    <mat-error *ngIf="password.hasError('required')">
+                        Пароль є обов'язковим.
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-error *ngIf="error">{{error}}</mat-error>
+
                 <button mat-raised-button color="accent" class="submit-button" aria-label="LOG IN"
+                        (click)="login()"
                         [disabled]="loginForm.invalid">
                     Увійти
+                </button>
+
+                <div class="separator">
+                    <span class="text">або</span>
+                </div>
+
+                <button mat-raised-button color="accent" class="submit-button" aria-label="LOG IN"
+                        (click)="register()"
+                        [disabled]="loginForm.invalid">
+                    Зареєструватися
                 </button>
             </form>
         </div>

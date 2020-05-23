@@ -1,16 +1,16 @@
 @import "src/@fuse/scss/fuse";
 
 chat-user-sidenav {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 
-    mat-toolbar {
+  mat-toolbar {
 
-        .toolbar-bottom {
-            height: 180px;
-        }
+    .toolbar-bottom {
+      height: 180px;
     }
+  }
 }
