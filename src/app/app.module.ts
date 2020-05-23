@@ -17,6 +17,8 @@ import { fuseConfig } from 'app/fuse-config';
 import { AppComponent } from 'app/app.component';
 import { AppRoutingModule } from './app.routing.module';
 import { LayoutModule } from './layout/layout.module';
+import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { FakeDbService } from './fake-db/fake-db.service';
 
 @NgModule({
     declarations: [
@@ -28,6 +30,10 @@ import { LayoutModule } from './layout/layout.module';
         HttpClientModule,
         AppRoutingModule,
         LayoutModule,
+        InMemoryWebApiModule.forRoot(FakeDbService, {
+            delay: 0,
+            passThruUnknownUrl: true
+        }),
 
         TranslateModule.forRoot(),
 
