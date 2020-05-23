@@ -77,10 +77,12 @@ $typography: mat-typography-config(
 // @ Component theming
 // -----------------------------------------------------------------------------------------------------
 @import "src/app/authentication/login/login.theme";
+@import "src/app/chat/chat.theme";
 
 // Define a mixin for easier access
 @mixin components-theme($theme) {
     @include login-theme($theme);
+    @include chat-theme($theme);
 }
 
 // -----------------------------------------------------------------------------------------------------

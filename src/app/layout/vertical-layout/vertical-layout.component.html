@@ -1,24 +1,4 @@
-<!-- SIDE PANEL -->
-<ng-container *ngIf="!fuseConfig.layout.sidepanel.hidden && fuseConfig.layout.sidepanel.position === 'left'">
-
-    <!-- CHAT PANEL -->
-    <!--    <fuse-sidebar name="chatPanel" position="left" class="chat-panel left-chat-panel"-->
-    <!--                  [folded]="true" [foldedWidth]="70" [foldedAutoTriggerOnHover]="false"-->
-    <!--                  lockedOpen="gt-md">-->
-    <!--        <chat-panel></chat-panel>-->
-    <!--    </fuse-sidebar>-->
-    <!-- / CHAT PANEL -->
-
-</ng-container>
-<!-- / SIDE PANEL -->
-
 <div id="main">
-
-    <!-- TOOLBAR: Above -->
-    <!--    <ng-container *ngIf="fuseConfig.layout.toolbar.position === 'above'">-->
-    <!--        <ng-container *ngTemplateOutlet="toolbar"></ng-container>-->
-    <!--    </ng-container>-->
-    <!-- / TOOLBAR: Above -->
 
     <div id="container-1" class="container">
 
@@ -30,20 +10,8 @@
 
         <div id="container-2" class="container">
 
-            <!-- TOOLBAR: Below fixed -->
-            <!--            <ng-container *ngIf="fuseConfig.layout.toolbar.position === 'below-fixed'">-->
-            <!--                <ng-container *ngTemplateOutlet="toolbar"></ng-container>-->
-            <!--            </ng-container>-->
-            <!-- / TOOLBAR: Below fixed -->
-
             <div id="container-3" class="container" fusePerfectScrollbar
                  [fusePerfectScrollbarOptions]="{suppressScrollX: true, updateOnRouteChange : true}">
-
-                <!-- TOOLBAR: Below static -->
-                <!--                <ng-container *ngIf="fuseConfig.layout.toolbar.position === 'below-static'">-->
-                <!--                    <ng-container *ngTemplateOutlet="toolbar"></ng-container>-->
-                <!--                </ng-container>-->
-                <!-- / TOOLBAR: Below static -->
 
                 <!-- CONTENT -->
                 <content></content>
@@ -81,37 +49,12 @@
 
 </div>
 
-<!-- SIDE PANEL -->
-<ng-container *ngIf="!fuseConfig.layout.sidepanel.hidden && fuseConfig.layout.sidepanel.position === 'right'">
-
-    <!-- CHAT PANEL -->
-    <!--    <fuse-sidebar name="chatPanel" position="right" class="chat-panel right-chat-panel"-->
-    <!--                  [folded]="true" [foldedWidth]="70" [foldedAutoTriggerOnHover]="false"-->
-    <!--                  lockedOpen="gt-md">-->
-    <!--        <chat-panel></chat-panel>-->
-    <!--    </fuse-sidebar>-->
-    <!-- / CHAT PANEL -->
-
-</ng-container>
-<!-- / SIDE PANEL -->
-
 <!-- QUICK PANEL -->
 <fuse-sidebar name="quickPanel" position="right" class="quick-panel">
     <quick-panel></quick-panel>
 </fuse-sidebar>
 <!-- / QUICK PANEL -->
 
-<!-- ----------------------------------------------------------------------------------------------------- -->
-<!-- @ PARTIALS                                                                                            -->
-<!-- ----------------------------------------------------------------------------------------------------- -->
-
-<!-- TOOLBAR -->
-<!--<ng-template #toolbar>-->
-<!--    <toolbar *ngIf="!fuseConfig.layout.toolbar.hidden"-->
-<!--             [ngClass]="fuseConfig.layout.toolbar.customBackgroundColor === true ? fuseConfig.layout.toolbar.position + ' ' + fuseConfig.layout.toolbar.background : fuseConfig.layout.toolbar.position">-->
-<!--    </toolbar>-->
-<!--</ng-template>-->
-<!-- / TOOLBAR -->
 
 <!-- FOOTER -->
 <ng-template #footer>
