@@ -9,14 +9,13 @@ import { ContentComponent } from 'app/layout/components/content/content.componen
     declarations: [
         ContentComponent
     ],
-    imports     : [
+    imports: [
         RouterModule,
         FuseSharedModule
     ],
-    exports     : [
+    exports: [
         ContentComponent
     ]
 })
-export class ContentModule
-{
+export class ContentModule {
 }

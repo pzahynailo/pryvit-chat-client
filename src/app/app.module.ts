@@ -19,6 +19,7 @@ import { AppRoutingModule } from './app.routing.module';
 import { LayoutModule } from './layout/layout.module';
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { FakeDbService } from './fake-db/fake-db.service';
+import { AuthGuard } from './services/auth/auth-guard.service';
 
 @NgModule({
     declarations: [
@@ -53,6 +54,9 @@ import { FakeDbService } from './fake-db/fake-db.service';
     ],
     bootstrap: [
         AppComponent
+    ],
+    providers: [
+        AuthGuard
     ]
 })
 export class AppModule {

@@ -11,17 +11,16 @@ import { NavbarHorizontalStyle1Component } from 'app/layout/components/navbar/ho
     declarations: [
         NavbarHorizontalStyle1Component
     ],
-    imports     : [
+    imports: [
         MatButtonModule,
         MatIconModule,
 
         FuseSharedModule,
         FuseNavigationModule
     ],
-    exports     : [
+    exports: [
         NavbarHorizontalStyle1Component
     ]
 })
-export class NavbarHorizontalStyle1Module
-{
+export class NavbarHorizontalStyle1Module {
 }

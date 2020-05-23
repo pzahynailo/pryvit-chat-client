@@ -9,28 +9,32 @@ import { FuseSharedModule } from '../../@fuse/shared.module';
 import { LoginComponent } from './login/login.component';
 
 
-
 const routes = [
-  {
-    path     : 'login',
-    component: LoginComponent
-  }
+    {
+        path: 'login',
+        component: LoginComponent
+    },
+    {
+        path: '**',
+        redirectTo: 'login'
+    }
 ];
 
 @NgModule({
-  declarations: [
-    LoginComponent
-  ],
-  imports     : [
-    RouterModule.forChild(routes),
+    declarations: [
+        LoginComponent
+    ],
+    imports: [
+        RouterModule.forChild(routes),
 
-    MatButtonModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
 
-    FuseSharedModule
-  ]
+        FuseSharedModule
+    ]
 })
-export class AuthenticationModule { }
+export class AuthenticationModule {
+}

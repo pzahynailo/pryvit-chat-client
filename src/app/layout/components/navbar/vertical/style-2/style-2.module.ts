@@ -11,17 +11,16 @@ import { NavbarVerticalStyle2Component } from 'app/layout/components/navbar/vert
     declarations: [
         NavbarVerticalStyle2Component
     ],
-    imports     : [
+    imports: [
         MatButtonModule,
         MatIconModule,
 
         FuseSharedModule,
         FuseNavigationModule
     ],
-    exports     : [
+    exports: [
         NavbarVerticalStyle2Component
     ]
 })
-export class NavbarVerticalStyle2Module
-{
+export class NavbarVerticalStyle2Module {
 }

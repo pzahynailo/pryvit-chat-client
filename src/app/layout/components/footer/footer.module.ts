@@ -12,7 +12,7 @@ import { FooterComponent } from 'app/layout/components/footer/footer.component';
     declarations: [
         FooterComponent
     ],
-    imports     : [
+    imports: [
         RouterModule,
 
         MatButtonModule,
@@ -21,10 +21,9 @@ import { FooterComponent } from 'app/layout/components/footer/footer.component';
 
         FuseSharedModule
     ],
-    exports     : [
+    exports: [
         FooterComponent
     ]
 })
-export class FooterModule
-{
+export class FooterModule {
 }
