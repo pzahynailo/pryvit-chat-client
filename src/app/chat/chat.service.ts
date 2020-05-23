@@ -1,15 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable, Subject } from 'rxjs';
 
 import { FuseUtils } from '@fuse/utils';
+import { SocketService } from '../services/chat-sockets/socket.service';
+import { RoomsService } from '../services/rooms/rooms.service';
+import { tap } from 'rxjs/operators';
+import { UsersService } from '../services/users/users.service';
+import { Room } from '../entities/room';
+import { User } from '../entities/user';
 
 @Injectable()
 export class ChatService implements Resolve<any> {
     contacts: any[];
-    chats: any[];
-    user: any;
+    chats: Room[];
+    user: User;
     onChatSelected: BehaviorSubject<any>;
     onContactSelected: BehaviorSubject<any>;
     onChatsUpdated: Subject<any>;
@@ -17,12 +23,10 @@ export class ChatService implements Resolve<any> {
     onLeftSidenavViewChanged: Subject<any>;
     onRightSidenavViewChanged: Subject<any>;
 
-    /**
-     * Constructor
-     *
-     * @param {HttpClient} _httpClient
-     */
-    constructor(private _httpClient: HttpClient) {
+    constructor(private _httpClient: HttpClient,
+                private roomsService: RoomsService,
+                private socketService: SocketService,
+                private usersService: UsersService) {
         // Set the defaults
         this.onChatSelected = new BehaviorSubject(null);
         this.onContactSelected = new BehaviorSubject(null);
@@ -39,113 +43,103 @@ export class ChatService implements Resolve<any> {
      * @param {RouterStateSnapshot} state
      * @returns {Observable<any> | Promise<any> | any}
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
-        return new Promise((resolve, reject) => {
-            Promise.all([
-                this.getContacts(),
-                this.getChats(),
-                this.getUser()
-            ]).then(
-                ([ contacts, chats, user ]) => {
-                    this.contacts = contacts;
-                    this.chats = chats;
-                    this.user = user;
-                    resolve();
-                },
-                reject
-            );
-        });
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
+        return forkJoin([
+            this.roomsService.getRooms(),
+            this.usersService.getProfile()
+        ]).pipe(tap(([ chats, user ]) => {
+            this.chats = chats;
+            this.user = user;
+        }));
     }
 
     /**
      * Get chat
-     *
-     * @param contactId
-     * @returns {Promise<any>}
      */
-    getChat(contactId): Promise<any> {
-        const chatItem = this.user.chatList.find((item) => {
-            return item.contactId === contactId;
-        });
+    getChat(chatId: string): Observable<Room> {
+        return this.roomsService.getRoom(chatId).pipe(tap(chat => {
+            this.onChatSelected.next(chat);
+        }));
+        // const chatItem = this.user.chatList.find((item) => {
+        //     return item.contactId === contactId;
+        // });
 
-        // Create new chat, if it's not created yet.
-        if (!chatItem) {
-            this.createNewChat(contactId).then((newChats) => {
-                this.getChat(contactId);
-            });
-            return;
-        }
+        // // Create new chat, if it's not created yet.
+        // if (!chatItem) {
+        //     this.createNewChat(contactId).then((newChats) => {
+        //         this.getChat(contactId);
+        //     });
+        //     return;
+        // }
 
-        return new Promise((resolve, reject) => {
-            this._httpClient.get('api/chat-chats/' + chatItem.id)
-                .subscribe((response: any) => {
-                    const chat = response;
-
-                    const chatContact = this.contacts.find((contact) => {
-                        return contact.id === contactId;
-                    });
-
-                    const chatData = {
-                        chatId: chat.id,
-                        dialog: chat.dialog,
-                        contact: chatContact
-                    };
-
-                    this.onChatSelected.next({...chatData});
-
-                }, reject);
-
-        });
+        // return new Promise((resolve, reject) => {
+        //     this._httpClient.get('api/chat-chats/' + chatItem.id)
+        //         .subscribe((response: any) => {
+        //             const chat = response;
+        //
+        //             const chatContact = this.contacts.find((contact) => {
+        //                 return contact.id === contactId;
+        //             });
+        //
+        //             const chatData = {
+        //                 chatId: chat.id,
+        //                 dialog: chat.dialog,
+        //                 contact: chatContact
+        //             };
+        //
+        //             this.onChatSelected.next({...chatData});
+        //
+        //         }, reject);
+        //
+        // });
 
     }
 
     /**
      * Create new chat
-     *
-     * @param contactId
-     * @returns {Promise<any>}
      */
-    createNewChat(contactId): Promise<any> {
-        return new Promise((resolve, reject) => {
-
-            const contact = this.contacts.find((item) => {
-                return item.id === contactId;
-            });
-
-            const chatId = FuseUtils.generateGUID();
-
-            const chat = {
-                id: chatId,
-                dialog: []
-            };
-
-            const chatListItem = {
-                contactId: contactId,
-                id: chatId,
-                lastMessageTime: '2017-02-18T10:30:18.931Z',
-                name: contact.name,
-                unread: null
-            };
-
-            // Add new chat list item to the user's chat list
-            this.user.chatList.push(chatListItem);
-
-            // Post the created chat
-            this._httpClient.post('api/chat-chats', {...chat})
-                .subscribe((response: any) => {
-
-                    // Post the new the user data
-                    this._httpClient.post('api/chat-user/' + this.user.id, this.user)
-                        .subscribe(newUserData => {
-
-                            // Update the user data from server
-                            this.getUser().then(updatedUser => {
-                                this.onUserUpdated.next(updatedUser);
-                                resolve(updatedUser);
-                            });
-                        });
-                }, reject);
-        });
+    createNewChat(title: string) {
+        // new Promise((resolve, reject) => {
+        //
+        //     const contact = this.contacts.find((item) => {
+        //         return item.id === contactId;
+        //     });
+        //
+        //     const chatId = FuseUtils.generateGUID();
+        //
+        //     const chat = {
+        //         id: chatId,
+        //         dialog: []
+        //     };
+        //
+        //     const chatListItem = {
+        //         contactId: contactId,
+        //         id: chatId,
+        //         lastMessageTime: '2017-02-18T10:30:18.931Z',
+        //         name: contact.name,
+        //         unread: null
+        //     };
+        //
+        //     // Add new chat list item to the user's chat list
+        //     // this.user.chatList.push(chatListItem);
+        //
+        //     // Post the created chat
+        //     this._httpClient.post('api/chat-chats', {...chat})
+        //         .subscribe((response: any) => {
+        //
+        //             // Post the new the user data
+        //             // this._httpClient.post('api/chat-user/' + this.user.id, this.user)
+        //             //     .subscribe(newUserData => {
+        //             //
+        //             //         // Update the user data from server
+        //             //         this.getUser().then(updatedUser => {
+        //             //             this.onUserUpdated.next(updatedUser);
+        //             //             resolve(updatedUser);
+        //             //         });
+        //             //     });
+        //         }, reject);
+        // });
+        this.socketService.addRoom(title);
     }
 
     /**
@@ -163,7 +157,7 @@ export class ChatService implements Resolve<any> {
      * @param status
      */
     setUserStatus(status): void {
-        this.user.status = status;
+        // this.user.status = status;
     }
 
     /**
@@ -172,11 +166,11 @@ export class ChatService implements Resolve<any> {
      * @param userData
      */
     updateUserData(userData): void {
-        this._httpClient.post('api/chat-user/' + this.user.id, userData)
-            .subscribe((response: any) => {
-                    this.user = userData;
-                }
-            );
+        // this._httpClient.post('api/chat-user/' + this.user.id, userData)
+        //     .subscribe((response: any) => {
+        //             this.user = userData;
+        //         }
+        //     );
     }
 
     /**
@@ -206,14 +200,14 @@ export class ChatService implements Resolve<any> {
      *
      * @returns {Promise<any>}
      */
-    getContacts(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this._httpClient.get('api/chat-contacts')
-                .subscribe((response: any) => {
-                    resolve(response);
-                }, reject);
-        });
-    }
+    // getContacts(): Promise<any> {
+    //     return new Promise((resolve, reject) => {
+    //         this._httpClient.get('api/chat-contacts')
+    //             .subscribe((response: any) => {
+    //                 resolve(response);
+    //             }, reject);
+    //     });
+    // }
 
     /**
      * Get chats
@@ -222,7 +216,7 @@ export class ChatService implements Resolve<any> {
      */
     getChats(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this._httpClient.get('api/chat-chats')
+            this._httpClient.get('api/rooms')
                 .subscribe((response: any) => {
                     resolve(response);
                 }, reject);

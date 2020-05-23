@@ -6,6 +6,8 @@ import { takeUntil } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/fuse-mat-sidenav.service';
 import { ChatService } from '../../../chat.service';
+import { Room } from '../../../../entities/room';
+import { SocketService } from '../../../../services/chat-sockets/socket.service';
 
 @Component({
     selector: 'chat-chats-sidenav',
@@ -15,7 +17,7 @@ import { ChatService } from '../../../chat.service';
     animations: fuseAnimations
 })
 export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
-    chats: any[];
+    chats: Room[];
     chatSearch: any;
     contacts: any[];
     searchText: string;
@@ -24,17 +26,11 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     // Private
     private _unsubscribeAll: Subject<any>;
 
-    /**
-     * Constructor
-     *
-     * @param {ChatService} _chatService
-     * @param {FuseMatSidenavHelperService} _fuseMatSidenavHelperService
-     * @param {MediaObserver} _mediaObserver
-     */
     constructor(
         private _chatService: ChatService,
         private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
-        public _mediaObserver: MediaObserver
+        public _mediaObserver: MediaObserver,
+        private socketService: SocketService
     ) {
         // Set the defaults
         this.chatSearch = {
@@ -57,6 +53,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this.user = this._chatService.user;
         this.chats = this._chatService.chats;
         this.contacts = this._chatService.contacts;
+        this.getRoomsFromSocket();
 
         this._chatService.onChatsUpdated
             .pipe(takeUntil(this._unsubscribeAll))
@@ -71,6 +68,16 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
             });
     }
 
+    getRoomsFromSocket() {
+        this.socketService.getRooms().pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(room => {
+                this.chats = [
+                    room,
+                    ...this.chats
+                ]
+            });
+    }
+
     /**
      * On destroy
      */
@@ -80,17 +87,8 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this._unsubscribeAll.complete();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Get chat
-     *
-     * @param contact
-     */
-    getChat(contact): void {
-        this._chatService.getChat(contact);
+    getChat(chat: Room): void {
+        this._chatService.getChat(chat._id).subscribe();
 
         if (!this._mediaObserver.isActive('gt-md')) {
             this._fuseMatSidenavHelperService.getSidenav('chat-left-sidenav').toggle();
@@ -113,6 +111,12 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      */
     changeLeftSidenavView(view): void {
         this._chatService.onLeftSidenavViewChanged.next(view);
+    }
+
+    createNewRoom() {
+        this._chatService.createNewChat(this.searchText);
+        this.chatSearch.name = '';
+        this.searchText = '';
     }
 
     /**
