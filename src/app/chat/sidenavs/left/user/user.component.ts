@@ -44,7 +44,6 @@ export class ChatUserSidenavComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 this.user.mood = data.mood;
                 this.user.status = data.status;
-                this._chatService.updateUserData(this.user);
             });
     }
 

@@ -21,7 +21,6 @@ import { AuthenticationService } from '../../../../services/auth/authentication.
 export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     chats: Room[];
     chatSearch: any;
-    contacts: any[];
     searchText: string;
     user: User;
 
@@ -45,17 +44,9 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this.unsubscribeAll$ = new Subject();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
     ngOnInit(): void {
         this.user = this.chatService.user;
         this.chats = this.chatService.chats;
-        this.contacts = this.chatService.contacts;
         this.getRoomsFromSocket();
         this.getMessagesFromSocket();
 
@@ -124,7 +115,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * @param status
      */
     setUserStatus(status): void {
-        this.chatService.setUserStatus(status);
+        console.info(status);
     }
 
     /**
