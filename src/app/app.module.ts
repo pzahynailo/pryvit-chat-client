@@ -22,6 +22,7 @@ import { FakeDbService } from './fake-db/fake-db.service';
 import { AuthGuard } from './services/auth/auth-guard.service';
 import { AuthInterceptor } from './services/auth/auth.interceptor';
 import { SocketIoModule } from 'ngx-socket-io';
+import { AuthPageGuard } from './services/auth/auth-page.guard.service';
 
 @NgModule({
     declarations: [
@@ -60,6 +61,7 @@ import { SocketIoModule } from 'ngx-socket-io';
     ],
     providers: [
         AuthGuard,
+        AuthPageGuard,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,

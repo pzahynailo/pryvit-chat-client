@@ -8,6 +8,8 @@ import { FuseMatSidenavHelperService } from '@fuse/directives/fuse-mat-sidenav/f
 import { ChatService } from '../../../chat.service';
 import { Room } from '../../../../entities/room';
 import { SocketService } from '../../../../services/chat-sockets/socket.service';
+import { User } from '../../../../entities/user';
+import { AuthenticationService } from '../../../../services/auth/authentication.service';
 
 @Component({
     selector: 'chat-chats-sidenav',
@@ -21,16 +23,17 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
     chatSearch: any;
     contacts: any[];
     searchText: string;
-    user: any;
+    user: User;
 
     // Private
-    private _unsubscribeAll: Subject<any>;
+    private unsubscribeAll$: Subject<any>;
 
     constructor(
-        private _chatService: ChatService,
-        private _fuseMatSidenavHelperService: FuseMatSidenavHelperService,
-        public _mediaObserver: MediaObserver,
-        private socketService: SocketService
+        private chatService: ChatService,
+        private fuseMatSidenavHelperService: FuseMatSidenavHelperService,
+        public mediaObserver: MediaObserver,
+        private socketService: SocketService,
+        private authService: AuthenticationService
     ) {
         // Set the defaults
         this.chatSearch = {
@@ -39,7 +42,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this.searchText = '';
 
         // Set the private defaults
-        this._unsubscribeAll = new Subject();
+        this.unsubscribeAll$ = new Subject();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -50,26 +53,26 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        this.user = this._chatService.user;
-        this.chats = this._chatService.chats;
-        this.contacts = this._chatService.contacts;
+        this.user = this.chatService.user;
+        this.chats = this.chatService.chats;
+        this.contacts = this.chatService.contacts;
         this.getRoomsFromSocket();
 
-        this._chatService.onChatsUpdated
-            .pipe(takeUntil(this._unsubscribeAll))
+        this.chatService.onChatsUpdated
+            .pipe(takeUntil(this.unsubscribeAll$))
             .subscribe(updatedChats => {
                 this.chats = updatedChats;
             });
 
-        this._chatService.onUserUpdated
-            .pipe(takeUntil(this._unsubscribeAll))
+        this.chatService.onUserUpdated
+            .pipe(takeUntil(this.unsubscribeAll$))
             .subscribe(updatedUser => {
                 this.user = updatedUser;
             });
     }
 
     getRoomsFromSocket() {
-        this.socketService.getRooms().pipe(takeUntil(this._unsubscribeAll))
+        this.socketService.getRooms().pipe(takeUntil(this.unsubscribeAll$))
             .subscribe(room => {
                 this.chats = [
                     room,
@@ -83,15 +86,15 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
+        this.unsubscribeAll$.next();
+        this.unsubscribeAll$.complete();
     }
 
     getChat(chat: Room): void {
-        this._chatService.getChat(chat._id).subscribe();
+        this.chatService.getChat(chat._id).subscribe();
 
-        if (!this._mediaObserver.isActive('gt-md')) {
-            this._fuseMatSidenavHelperService.getSidenav('chat-left-sidenav').toggle();
+        if (!this.mediaObserver.isActive('gt-md')) {
+            this.fuseMatSidenavHelperService.getSidenav('chat-left-sidenav').toggle();
         }
     }
 
@@ -101,7 +104,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * @param status
      */
     setUserStatus(status): void {
-        this._chatService.setUserStatus(status);
+        this.chatService.setUserStatus(status);
     }
 
     /**
@@ -110,11 +113,11 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * @param view
      */
     changeLeftSidenavView(view): void {
-        this._chatService.onLeftSidenavViewChanged.next(view);
+        this.chatService.onLeftSidenavViewChanged.next(view);
     }
 
     createNewRoom() {
-        this._chatService.createNewChat(this.searchText);
+        this.chatService.createNewChat(this.searchText);
         this.chatSearch.name = '';
         this.searchText = '';
     }
@@ -123,6 +126,6 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      * Logout
      */
     logout(): void {
-        console.log('logout triggered');
+        this.authService.logout();
     }
 }

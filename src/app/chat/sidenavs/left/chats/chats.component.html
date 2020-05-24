@@ -11,13 +11,13 @@
 
                 <!-- USER AVATAR -->
                 <img (click)="changeLeftSidenavView('user')"
-                     src="{{user.avatar}}"
+                     src="/assets/images/avatars/default-avatar.png"
                      class="mat-avatar avatar"
-                     alt="{{user.name}}"/>
+                     alt="{{user.username}}"/>
                 <!-- / USER AVATAR -->
 
-                <mat-icon class="s-16 status" [ngClass]="user.status"
-                          [matMenuTriggerFor]="userStatusMenu"></mat-icon>
+<!--                <mat-icon class="s-16 status" [ngClass]="user.status"-->
+<!--                          [matMenuTriggerFor]="userStatusMenu"></mat-icon>-->
 
                 <!-- USER STATUS -->
                 <mat-menu id="user-status-menu" #userStatusMenu="matMenu">
