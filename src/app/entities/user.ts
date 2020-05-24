@@ -15,6 +15,8 @@ export class User {
      */
     public _id: string;
 
+    public avatar: string;
+
 
     public constructor(username: string = null, password: string = null, _id?: string) {
         this.username = username;

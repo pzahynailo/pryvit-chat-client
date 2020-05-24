@@ -8,6 +8,7 @@ import { ChatService } from '../chat.service';
 import { Room } from '../../entities/room';
 import { User } from '../../entities/user';
 import { Message } from '../../entities/message';
+import { SocketService } from '../../services/chat-sockets/socket.service';
 
 @Component({
     selector: 'chat-view',
@@ -29,35 +30,25 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('replyForm')
     replyForm: NgForm;
 
-    // Private
     private _unsubscribeAll: Subject<any>;
 
-    /**
-     * Constructor
-     *
-     * @param {ChatService} _chatService
-     */
     constructor(
-        private _chatService: ChatService
+        private _chatService: ChatService,
+        private socketService: SocketService
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
     ngOnInit(): void {
         this.user = this._chatService.user;
+        this.getMessagesFromSocket();
         this._chatService.onChatSelected
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(chatData => {
                 if (chatData) {
                     this.selectedChat = chatData;
+                    this.socketService.joinRoom(chatData._id);
                     // this.contact = chatData.contact;
                     // this.selectedChat.messages = chatData.dialog;
                     this.readyToReply();
@@ -82,10 +73,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this._unsubscribeAll.complete();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
     /**
      * Decide whether to show or not the contact's avatar in the message row
      *
@@ -108,9 +95,9 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * @param i
      * @returns {boolean}
      */
-    isFirstMessageOfGroup(message, i): boolean {
+    isFirstMessageOfGroup(message: Message, i): boolean {
         return (i === 0 || this.selectedChat.messages[i - 1]
-            && this.selectedChat.messages[i - 1].user._id !== message.who);
+            && this.selectedChat.messages[i - 1].user._id !== message.user._id);
     }
 
     /**
@@ -120,22 +107,15 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * @param i
      * @returns {boolean}
      */
-    isLastMessageOfGroup(message, i): boolean {
+    isLastMessageOfGroup(message: Message, i): boolean {
         return (i === this.selectedChat.messages.length - 1 || this.selectedChat.messages[i + 1]
-            && this.selectedChat.messages[i + 1].user._id !== message.who);
+            && this.selectedChat.messages[i + 1].user._id !== message.user._id);
     }
-
-    /**
-     * Select contact
-     */
-    // selectContact(): void {
-    //     this._chatService.selectContact(this.contact);
-    // }
 
     /**
      * Ready to reply
      */
-    readyToReply(): void {
+    readyToReply() {
         setTimeout(() => {
             this.focusReplyInput();
             this.scrollToBottom();
@@ -172,27 +152,34 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     reply(event): void {
         event.preventDefault();
-        //
-        // if (!this.replyForm.form.value.message) {
-        //     return;
-        // }
-        //
-        // // Message
-        // const message = {
-        //     who: this.user.id,
-        //     message: this.replyForm.form.value.message,
-        //     time: new Date().toISOString()
-        // };
-        //
-        // // Add the message to the chat
-        // this.selectedChat.messages.push(message);
-        //
-        // // Reset the reply form
-        // this.replyForm.reset();
-        //
-        // // Update the server
-        // this._chatService.updateDialog(this.selectedChat._id, this.selectedChat.messages).then(response => {
-        //     this.readyToReply();
-        // });
+        if (!this.replyForm.form.value.message) {
+            return;
+        }
+        const message: Message = new Message(
+            this.user,
+            this.replyForm.form.value.message,
+            this.selectedChat._id,
+            new Date());
+        this.socketService.sendMessage(
+            this.replyForm.form.value.message,
+            this.user,
+            this.selectedChat._id
+        );
+        // Add the message to the chat
+        this.selectedChat.messages.push(message);
+        // Reset the reply form
+        this.replyForm.reset();
+        this.readyToReply();
+    }
+
+    getMessagesFromSocket() {
+        this.socketService.getMessage()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(message => {
+                console.log(message);
+                if (message.room === this.selectedChat._id && this.user._id !== message.user._id) {
+                    this.selectedChat.messages.push(message);
+                }
+            })
     }
 }
