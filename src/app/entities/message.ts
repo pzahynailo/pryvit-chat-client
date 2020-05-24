@@ -16,7 +16,7 @@ export class Message {
 
     public date: Date;
 
-    public constructor(user: User, text: string, date: Date, room?: string) {
+    public constructor(user: User, text: string, room: string, date?: Date) {
         this.user = user;
         this.text = text;
         this.room = room;

@@ -21,6 +21,7 @@ import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { FakeDbService } from './fake-db/fake-db.service';
 import { AuthGuard } from './services/auth/auth-guard.service';
 import { AuthInterceptor } from './services/auth/auth.interceptor';
+import { SocketIoModule } from 'ngx-socket-io';
 
 @NgModule({
     declarations: [
@@ -36,6 +37,7 @@ import { AuthInterceptor } from './services/auth/auth.interceptor';
             delay: 0,
             passThruUnknownUrl: true
         }),
+        SocketIoModule,
 
         TranslateModule.forRoot(),
 

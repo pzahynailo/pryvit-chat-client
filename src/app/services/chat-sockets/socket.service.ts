@@ -13,8 +13,8 @@ export class SocketService {
     public constructor(private socket: SocketOne) {
     }
 
-    public sendMessage(text: string, name: string, roomId: string): void {
-        this.socket.emit('message', {message: text, username: name, room: roomId});
+    public sendMessage(text: string, user: User, roomId: string): void {
+        this.socket.emit('message', {message: text, user, roomId});
     }
 
     public getMessage(): Observable<Message> {
