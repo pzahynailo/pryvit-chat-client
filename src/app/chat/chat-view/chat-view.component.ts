@@ -82,9 +82,11 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     shouldShowContactAvatar(message: Message, i): boolean {
         const messages = this.selectedChat.messages;
+        const nextMessage = messages[i + 1];
+        const prevMessage = messages[i - 1];
         return (
             message.user._id !== this.user._id &&
-            ((messages[i + 1] && messages[i + 1].user._id !== message.user._id) || !messages[i + 1])
+            ((prevMessage && prevMessage.user._id !== message.user._id) || !prevMessage)
         );
     }
 

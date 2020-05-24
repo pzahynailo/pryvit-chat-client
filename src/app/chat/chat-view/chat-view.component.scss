@@ -61,15 +61,23 @@ chat-view {
               line-height: 1.2;
             }
 
-            .time {
+            .info {
               position: absolute;
               display: none;
               width: 100%;
               font-size: 11px;
-              margin-top: 8px;
-              top: 100%;
+              top: -25px;
               left: 0;
+              align-items: baseline;
+              margin-top: 2px;
+              margin-left: 0;
               white-space: nowrap;
+
+              .username {
+                font-size: 16px;
+                font-weight: 600;
+                margin-right: 0.5em;
+              }
             }
           }
 
@@ -82,9 +90,6 @@ chat-view {
               border-top-right-radius: 20px;
               border-bottom-right-radius: 20px;
 
-              .time {
-                margin-left: 12px;
-              }
             }
 
             &.first-of-group {
@@ -119,7 +124,7 @@ chat-view {
               border-top-right-radius: 5px;
               border-bottom-right-radius: 5px;
 
-              .time {
+              .info {
                 justify-content: flex-end;
                 right: 0;
                 margin-right: 12px;
@@ -148,10 +153,15 @@ chat-view {
           }
 
           &.first-of-group {
+            padding-top: 25px;
 
             .bubble {
               border-top-left-radius: 20px;
               padding-top: 13px;
+            }
+
+            .info {
+              display: flex;
             }
           }
 
@@ -160,10 +170,6 @@ chat-view {
             .bubble {
               border-bottom-left-radius: 20px;
               padding-bottom: 13px;
-
-              .time {
-                display: flex;
-              }
             }
           }
         }

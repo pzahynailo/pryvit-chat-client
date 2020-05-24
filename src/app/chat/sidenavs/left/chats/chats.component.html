@@ -126,12 +126,12 @@
 
                         <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
                             <div class="contact-name">{{chat.title}}</div>
-<!--                            <div class="contact-last-message">{{chat.lastMessage}}</div>-->
+                            <div class="contact-last-message">{{chat.lastMessage}}</div>
                         </div>
 
                         <div fxLayout="column" fxLayoutAlign="start end">
                             <div class="contact-last-message-time">
-                                {{chat.lastMessageTime | date}}
+                                {{chat.lastMessageDate | date: 'short' }}
                             </div>
                             <div *ngIf="chat.unread" class="mt-4 unread-message-count accent">{{chat.unread}}</div>
                         </div>

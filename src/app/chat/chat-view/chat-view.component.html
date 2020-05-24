@@ -71,12 +71,15 @@
                             }">
 
                 <img *ngIf="shouldShowContactAvatar(message, i)"
-                     src="/assets/images/logos/logo.svg"
+                     src="/assets/images/avatars/default-avatar.png"
                      class="avatar">
 
                 <div class="bubble">
                     <div class="message">{{message.text}}</div>
-                    <div class="time secondary-text">{{message.date | date:'short'}}</div>
+                    <div class="info">
+                        <span class="username">{{message.user.username}}</span>
+                        <span class="secondary-text">{{message.date | date:'short'}}</span>
+                    </div>
                 </div>
 
             </div>

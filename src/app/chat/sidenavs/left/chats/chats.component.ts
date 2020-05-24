@@ -57,6 +57,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         this.chats = this.chatService.chats;
         this.contacts = this.chatService.contacts;
         this.getRoomsFromSocket();
+        this.getMessagesFromSocket();
 
         this.chatService.onChatsUpdated
             .pipe(takeUntil(this.unsubscribeAll$))
@@ -79,6 +80,25 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                     ...this.chats
                 ]
             });
+    }
+
+    getMessagesFromSocket() {
+        this.socketService.getMessage().pipe(takeUntil(this.unsubscribeAll$))
+            .subscribe(message => {
+               const index = this.chats.findIndex(chat => chat._id === message.room);
+               const chat = this.chats[index];
+               chat.lastMessage = message.text;
+               chat.lastMessageDate = message.date;
+               this.chats[index] = chat;
+               this.chats.sort((a, b) => {
+                   return this.getDateForRoom(b) - this.getDateForRoom(a);
+               });
+            });
+    }
+
+    private getDateForRoom(room: Room) {
+        const date = room.lastMessageDate;
+        return date ? new Date(date).getTime() : 0;
     }
 
     /**

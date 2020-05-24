@@ -23,6 +23,10 @@ export class Room {
      */
     public date: string;
 
+    public lastMessage: string;
+
+    public lastMessageDate: Date;
+
     public constructor(title: string, _id: string, messages?: Message[]) {
         this.title = title;
         this._id = _id;

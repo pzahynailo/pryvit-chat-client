@@ -25,6 +25,9 @@
       }
 
       #chat-content {
+        .info .username {
+          color: map-get($accent, default);
+        }
 
         .message-row {
 
