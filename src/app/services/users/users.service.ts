@@ -4,8 +4,10 @@ import { EMPTY, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { User } from '../../entities/user';
 import { CommonResult } from '../../entities/common-result';
+import { environment } from '../../../environments/environment';
 
-const api = '/api/users';
+
+const api = `${environment.apiUrl}/api/users`;
 
 @Injectable({
     providedIn: 'root',

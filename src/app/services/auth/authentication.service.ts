@@ -5,6 +5,7 @@ import { EMPTY, Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { User } from '../../entities/user';
 import { LocalStorageService } from './local-storage.service';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
@@ -12,7 +13,7 @@ import { LocalStorageService } from './local-storage.service';
 })
 export class AuthenticationService {
 
-    private readonly api = '/api/';
+    private readonly api = `${environment.apiUrl}/api/`;
 
     public constructor(private http: HttpClient,
                        private storage: LocalStorageService,

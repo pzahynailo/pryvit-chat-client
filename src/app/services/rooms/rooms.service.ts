@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Room } from '../../entities/room';
+import { environment } from '../../../environments/environment';
 
-const api = '/api/';
+const api = `${environment.apiUrl}/api/`;
 
 @Injectable({
     providedIn: 'root',
