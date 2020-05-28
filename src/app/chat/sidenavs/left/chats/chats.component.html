@@ -62,11 +62,11 @@
                     <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #userMenu="matMenu">
-                    <button mat-menu-item (click)="changeLeftSidenavView('user')">
-                        Profile
-                    </button>
+<!--                    <button mat-menu-item (click)="changeLeftSidenavView('user')">-->
+<!--                        Profile-->
+<!--                    </button>-->
                     <button mat-menu-item (click)="logout()">
-                        Logout
+                        Вийти
                     </button>
                 </mat-menu>
             </div>
@@ -107,7 +107,7 @@
         <div class="chat-list" fxLayout="column">
 
             <div matSubheader *ngIf="(chats | filter: searchText).length > 0">
-                Chats
+                Чати
             </div>
 
             <button mat-button class="contact"
