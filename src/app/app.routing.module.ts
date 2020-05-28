@@ -15,6 +15,10 @@ export const routes: Routes = [
         canActivate: [ AuthPageGuard ],
         loadChildren: () => import('./authentication/authentication.module')
             .then(m => m.AuthenticationModule)
+    },
+    {
+        path: '**',
+        redirectTo: '/'
     }
 ]
 
