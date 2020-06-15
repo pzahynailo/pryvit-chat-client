@@ -17,8 +17,6 @@ import { fuseConfig } from 'app/fuse-config';
 import { AppComponent } from 'app/app.component';
 import { AppRoutingModule } from './app.routing.module';
 import { LayoutModule } from './layout/layout.module';
-import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { FakeDbService } from './fake-db/fake-db.service';
 import { AuthGuard } from './services/auth/auth-guard.service';
 import { AuthInterceptor } from './services/auth/auth.interceptor';
 import { SocketIoModule } from 'ngx-socket-io';
@@ -34,10 +32,6 @@ import { AuthPageGuard } from './services/auth/auth-page.guard.service';
         HttpClientModule,
         AppRoutingModule,
         LayoutModule,
-        InMemoryWebApiModule.forRoot(FakeDbService, {
-            delay: 0,
-            passThruUnknownUrl: true
-        }),
         SocketIoModule,
 
         TranslateModule.forRoot(),
