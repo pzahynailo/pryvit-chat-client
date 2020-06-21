@@ -1,5 +1,3 @@
-export * from './confirm-dialog/confirm-dialog.module';
-export * from './countdown/countdown.module';
 export * from './demo/demo.module';
 export * from './highlight/highlight.module';
 export * from './material-color-picker/material-color-picker.module';

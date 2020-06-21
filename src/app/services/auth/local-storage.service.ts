@@ -6,8 +6,6 @@ import { isPlatformBrowser } from '@angular/common';
 })
 export class LocalStorageService {
 
-    public token: string;
-
     /** Name of token as local storage key */
     private readonly tokenName: string = 'authToken';
 

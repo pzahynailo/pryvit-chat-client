@@ -32,8 +32,4 @@ export class SocketService {
     public addRoom(roomName: string): void {
         this.socket.emit('addroom', roomName);
     }
-
-    public getUsers(): Observable<User[]> {
-        return this.socket.fromEvent<User[]>('usersRoom');
-    }
 }

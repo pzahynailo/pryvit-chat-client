@@ -20,7 +20,7 @@ export const routes: Routes = [
         path: '**',
         redirectTo: '/'
     }
-]
+];
 
 /** Routing for the root AppModule. */
 @NgModule({

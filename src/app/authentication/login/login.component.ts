@@ -6,7 +6,6 @@ import { fuseAnimations } from '@fuse/animations';
 import { AuthenticationService } from '../../services/auth/authentication.service';
 import { UsersService } from '../../services/users/users.service';
 import { User } from '../../entities/user';
-import { Router } from '@angular/router';
 import { catchError, switchMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 

@@ -23,15 +23,4 @@ export class User {
         this.password = password;
         this._id = _id;
     }
-
-    /**
-     * returns true if fields not filled
-     */
-    public static checkFieldsIsEmpty(user: User): boolean {
-        if (!user.username || !user.password || !user.username.trim() || !user.password.trim()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
