@@ -26,7 +26,6 @@ export class LoginComponent implements OnInit {
         private authService: AuthenticationService,
         private userService: UsersService,
     ) {
-        // Configure the layout
         this.fuseConfigService.config = {
             layout: {
                 navbar: {
