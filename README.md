@@ -1,6 +1,7 @@
 # Pryvit Chat Project
+This project is the front end of the application for the thesis on the topic "Modern technologies in web application development". University. Mechnikov, city of Odesa.
 
-Этот проект является клиентской частью приложения для дипломной работы Загинайло Павла на тему "Современные технологии в разработке веб-приложений". Университет им. Мечникова, город Одесса.
+Цей проект є клієнтською частиною програми для дипломної роботи Загінайло Павла на тему "Сучасні технології у розробці веб-додатків". Університет ім. Мечнікова, місто Одеса.
 
 ## Development server
 
